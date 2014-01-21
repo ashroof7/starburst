@@ -1,3 +1,6 @@
+# debug folder
+/Debug
+
 # Compiled Object files
 *.slo
 *.lo

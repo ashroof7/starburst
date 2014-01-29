@@ -16,6 +16,11 @@
 using namespace std;
 using namespace cv;
 
+
+const int NOISE_KERNEL_LENGTH = 5;
+const int NOISE_KERNEL_STD = 2;
+const double NOISE_BETA = 0.2;	//hysteresis factor for noise reduction
+
 class framebuffer {
 public:
 	framebuffer(int camera_index, int width, int height, bool remove_noise);
@@ -28,10 +33,7 @@ private:
 	VideoCapture cam_stream;
 	Mat last_frame;
 	Mat noise_reduction(Mat src);
-	bool noise_removal = false;
-	const int NOISE_KERNEL_LENGTH = 5;
-	const int NOISE_KERNEL_STD = 2;
-	const double NOISE_BETA = 0.2;	//hysteresis factor for noise reduction
+	bool noise_removal;
 	vector<Vec3b> C; // the avg accumulative intensity for all frames
 
 };

@@ -34,7 +34,7 @@ pupil::~pupil() {
 
 		Scalar intensity;
 		double angle;
-		Point p, *edge;
+		Point2d p, *edge;
 		double dis_cos, dis_sin;
 		int pixel_value1, pixel_value2;
 
@@ -42,8 +42,8 @@ pupil::~pupil() {
 	        angle < angle_normal + angle_spread / 2; angle += angle_step) {
 			dis_cos = dis * cos(angle);
 			dis_sin = dis * sin(angle);
-			p.x = cx + dis_cos;
-			p.y = cy + dis_sin;
+			p.x = round(cx + dis_cos);
+			p.y = round(cy + dis_sin);
 
 			if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height){
 						continue;}
@@ -52,8 +52,8 @@ pupil::~pupil() {
 			intensity = image.at<uchar>( p.y,  p.x);
 			pixel_value1 = (int)intensity.val[0];
 			while (1) {
-				p.x += dis_cos;
-				p.y += dis_sin;
+				p.x =round(p.x+ dis_cos);
+				p.y =round(p.y+ dis_sin);
 				//std::cout<<p.X<<" "<<p.Y<<std::endl;
 
 				if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height){
@@ -63,7 +63,7 @@ pupil::~pupil() {
 				pixel_value2 = (int)intensity.val[0];
 				//std::cout<<"intensity   "<<pixel_value2 - pixel_value1<<std::endl;
 				if (pixel_value2 - pixel_value1 >edge_thresh) {
-					edge = (Point*) malloc(sizeof(Point));
+					edge = (Point2d*) malloc(sizeof(Point2d));
 					edge->x = p.x - dis_cos / 2;
 					edge->y = p.y - dis_sin / 2;
 					feature_points.push_back(edge);
@@ -90,7 +90,7 @@ pupil::~pupil() {
  	int loop_count = 0;
  	double angle_step = 2 * PI / N;
  	double new_angle_step;
- 	Point *edge, edge_mean;
+ 	Point2d *edge, edge_mean;
  	double angle_normal;
  	double cx = start_point.x;
  	double cy = start_point.y;
@@ -145,7 +145,7 @@ pupil::~pupil() {
      printf("Error! Adaptive threshold is too low!\n");
      return;
    }
-   std::cout<<cx<<",,,,,,,,,,,"<<cy<<std::endl;
+
 
  std::cout<< "FEATUR POINTS: "<<feature_points.size()<<std::endl;
 
@@ -156,7 +156,7 @@ pupil::~pupil() {
   * return the final vector
   */
 
- vector<Point *> pupil::test(){
+ vector<Point2d *> pupil::test(){
 	 cv::Mat gray=grey_scale_image();
 	 	cv::Mat gray_1=grey_scale_image();
 	 	find_best_guess( gray);

@@ -43,9 +43,9 @@ private:
 	 * drawn from pts by shuffling the elements of pts.
 	 */
 	inline vector<Point> choose_random(vector<Point> &pts, int n){
-		vector<Point> rnd_pts(n);
 		random_shuffle(pts.begin(), pts.end());
-		copy(pts.begin(), pts.begin()+n, rnd_pts.begin());
+		vector<Point> rnd_pts(pts.begin(), pts.begin()+n);
+//		copy(pts.begin(), pts.begin()+n, rnd_pts.begin());
 		return rnd_pts;
 	}
 
@@ -59,24 +59,43 @@ private:
 	 */
 	inline bool ellipse_contour(const Mat &ellipse_params, vector<Point> &contour){
 		float a = ellipse_params.at<float>(0,0);
-		float b = ellipse_params.at<float>(1,0)/2;
+		float b = ellipse_params.at<float>(1,0)/2.0f;
 		float c = ellipse_params.at<float>(2,0);
-		float d = ellipse_params.at<float>(3,0)/2;
-		float f = ellipse_params.at<float>(4,0)/2;
+		float d = ellipse_params.at<float>(3,0)/2.0f;
+		float f = ellipse_params.at<float>(4,0)/2.0f;
 		float g = ellipse_params.at<float>(5,0);
 
-		if (abs(a*c - b*b)< EPS) // a*c-b*b == 0
-			return false;
+		float cond = b*b - a*c;
 
-		Point center((c*d - b*f)/(b*b - a*c), (a*f - b*d)/(b*b - a*c));
+		if (abs(cond)< EPS){ // a*c-b*b == 0
+			cout<<"fail cond "<<cond<<"  ";
+			return false;
+		}
+
+		Point center((c*d - b*f)/cond, (a*f - b*d)/cond );
 		// semi-axis calculations
 		float num = 2 * (a*f*f + c*d*d + g*b*b - 2*b*d*f - a*c*g);
 		float denum1 = (b*b - a*c) * ( sqrt((a-c)*(a-c) + 4*b*b) - (a + c));
 		float denum2 = (b*b - a*c) * (-sqrt((a-c)*(a-c) + 4*b*b) - (a + c));
+
+		cout<<"num = "<<num<<"  denum 1 = "<<denum1<<"  denum 2 = "<<denum2<<"  ";
+
+		if(abs(num)<EPS || abs(denum1) < EPS || abs(denum2) < EPS){
+			cout<<"fail fraction  ";
+			return false;
+		}
+
 		float a_semi_axis = sqrt(num / denum1);
 		float b_semi_axis = sqrt(num / denum2);
 		float major_axis = max(a_semi_axis, b_semi_axis);
-		float minor_axis = a_semi_axis + b_semi_axis - major_axis;
+//		float minor_axis = a_semi_axis + b_semi_axis - major_axis;
+		float minor_axis = min(a_semi_axis, b_semi_axis);
+
+		cout<<"major_axis = "<<major_axis<<"   minor axis = "<<minor_axis<<"  ";
+		if (major_axis < EPS || minor_axis < EPS){
+			cout<<"fail axis  ";
+			return false;
+		}
 
 		//TODO add another condition (axis related) with thresthold
 
@@ -97,7 +116,6 @@ private:
 					center.y - major_axis*cos(theta)*sin(phi) + minor_axis*sin(theta)*cos(phi));
 			contour.push_back(p);
 		}
-
 		return true;
 	}
 
@@ -110,7 +128,7 @@ private:
 		double temp;
 		inliers = 0;
 		for (unsigned int i = 0; i < pts.size(); ++i){
-			temp = pointPolygonTest(ellipse_contour,pts[i], true);
+			temp = abs(pointPolygonTest(ellipse_contour,pts[i], true));
 			if (temp<EPS)
 				inliers++;
 			dist += temp;

@@ -23,9 +23,13 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.258817975" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug">
 								<option id="gnu.cpp.compiler.exe.debug.option.optimization.level.326416833" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.exe.debug.option.debugging.level.283587795" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
+<<<<<<< HEAD
 								<option id="gnu.cpp.compiler.option.include.paths.1991409209" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include/eigen3"/>
 								</option>
+=======
+								<option id="gnu.cpp.compiler.option.include.paths.1991409209" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath"/>
+>>>>>>> fit_cv
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.174492345" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.2046483399" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug">
@@ -61,7 +65,11 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+<<<<<<< HEAD
 					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.472527935.2062142949" name="RANSAC.cpp" rcbsApplicability="disable" resourcePath="src/RANSAC.cpp" toolsToInvoke="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.258817975.1228355259">
+=======
+					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.472527935.2062142949" name="RANSAC.cpp" rcbsApplicability="disable" resourcePath="src/ellipsefit.cpp" toolsToInvoke="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.258817975.1228355259">
+>>>>>>> fit_cv
 						<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.258817975.1228355259" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.258817975">
 							<option id="gnu.cpp.compiler.option.include.paths.1828847201" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 								<listOptionValue builtIn="false" value="/usr/include/eigen3"/>
@@ -159,4 +167,5 @@
 			<resource resourceType="PROJECT" workspacePath="/starbrust"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

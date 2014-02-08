@@ -1,6 +1,6 @@
 #include <iostream>
 #include "framebuffer.h"
-#include "RANSAC.h"
+#include "ellipsefit.h"
 
 using namespace std;
 using namespace cv;
@@ -17,7 +17,6 @@ int points[] = {
 		136, 160,
 		195, 130,
 		247, 163,
-
 		//inliers
 		143, 225,
 		140, 221,
@@ -57,27 +56,27 @@ int points[] = {
 		183, 252,
 		181, 249,
 		//outliers
-//		88, 274,
-//		94, 272,
-//		142, 296,
-//		157, 291,
-//		167, 301,
-//		200, 305,
-//		222, 302,
-//		215, 336,
-//		261, 305,
-//		305, 163,
-//		360, 186,
-//		222, 150,
-//		256, 107,
-//		224, 100,
-//		201, 116,
-//		197, 121,
-//		180, 111,
-//		166, 120,
-//		150, 110,
-//		150, 91,
-//		69, 104
+		88, 274,
+		94, 272,
+		142, 296,
+		157, 291,
+		167, 301,
+		200, 305,
+		222, 302,
+		215, 336,
+		261, 305,
+		305, 163,
+		360, 186,
+		222, 150,
+		256, 107,
+		224, 100,
+		201, 116,
+		197, 121,
+		180, 111,
+		166, 120,
+		150, 110,
+		150, 91,
+		69, 104
 };
 
 
@@ -96,19 +95,6 @@ int main() {
 	//		waitKey(30);
 	//	}
 
-
-	// testing RANSAC
-	vector<Point> feature_pts;
-	for (int i = 0; i < 6*2; i+=2){
-		feature_pts.push_back(Point(points[i],points[i+1]));
-		cout<<feature_pts[i/2]<<endl;
-	}
-
-
-	RANSAC ransac(6, 0.99f);
-	vector<Point> ellipse_contour = ransac.get_ellipse(feature_pts);
-
-
 	Mat img = imread("eye.png");
 
 	//if fail to read the image
@@ -120,14 +106,23 @@ int main() {
 
 	//Create a window
 	namedWindow("namedWindow", 1);
+	vector<vector<Point> > contour_vector;
+	contour_vector.push_back(ellipse_contour);
+	drawContours(img, contour_vector, 0, Scalar(0,0,255), 1.5, CV_AA);
+	
 	//show the image
-	// Wait until user press some key
-	drawContours(img, ellipse_contour, 0, Scalar(0,0,255), 3, CV_AA);
-
 	imshow("namedWindow", img);
-	cout<<ellipse_contour.size()<<endl;
+	// Wait until user press some key
 	waitKey(0);
 
 
 	return 0;
 }
+
+// nourhan's main
+//int main() {
+//	pupil p("image5.png",18,10);
+//	p.test();
+//	return 0;
+//}
+

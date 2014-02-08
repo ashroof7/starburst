@@ -127,3 +127,11 @@ int main() {
 
 	return 0;
 }
+
+// nourhan's main
+//int main() {
+//	pupil p("image5.png",18,10);
+//	p.test();
+//	return 0;
+//}
+

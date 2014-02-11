@@ -37,10 +37,10 @@ public:
 	pupil(string input, int rays_number, int points);
 	virtual ~pupil();
 	void starburst_pupil_contour_detection(Mat gray);
-	vector<Point2d *> test();
+	vector<Point *> test();
 private:
-	Point2d start_point;
-	vector<Point2d *> feature_points;
+	Point start_point;
+	vector<Point *> feature_points;
 	vector<int> edge_intensity_diff;
 	int N;
 	Mat image;
@@ -68,11 +68,11 @@ private:
 	 * return the mean point
 	 */
 
-	inline Point2d get_edge_mean() {
-		Point2d *edge;
+	inline Point get_edge_mean() {
+		Point *edge;
 		int i;
 		double sumx = 0, sumy = 0;
-		Point2d edge_mean;
+		Point edge_mean;
 		for (i = 0; i < feature_points.size(); i++) {
 			edge = feature_points.at(i);
 			sumx += edge->x;
@@ -92,7 +92,7 @@ private:
 	 * return void
 	 */
 	inline void destroy_edge_point() {
-		vector<Point2d*>::iterator iter;
+		vector<Point*>::iterator iter;
 
 		if (feature_points.size() != 0) {
 			for (iter = feature_points.begin(); iter != feature_points.end();
@@ -108,8 +108,8 @@ private:
 	 * return center point
 	 * may use the center of image as start point as mentioned in paper
 	 */
-	inline Point2d find_best_guess(Mat gray) {
-		Point2d center;
+	inline Point find_best_guess(Mat gray) {
+		Point center;
 		// Convert to binary image by thresholding it
 		threshold(gray, gray, 220, 255, cv::THRESH_BINARY);
 

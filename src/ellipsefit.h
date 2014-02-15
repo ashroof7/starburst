@@ -1,12 +1,8 @@
 /*
- * RANSAC.h
+ * ellipsefit.h
  *
  *  Created on: Jan 29, 2014
  *  Author: Ashraf Saleh
- *
- *  References: book: practical openCV chapter 6. RANSAC algorithm
- *					  http://mathworld.wolfram.com/Ellipse.html
- *  			      http://nicky.vanforeest.com/misc/fitEllipse/fitEllipse.html
  *
  */
 

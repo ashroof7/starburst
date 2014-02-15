@@ -1,6 +1,7 @@
 #include <iostream>
 #include "framebuffer.h"
 #include "ellipsefit.h"
+#include "corneal_remover.h"
 
 using namespace std;
 using namespace cv;
@@ -85,39 +86,53 @@ int main() {
 	//	framebuffer framebuff(0, FRAME_WIDTH, FRAME_HEIGHT, 1);
 	//	Mat frame;
 
-	//	vector<Point> potential_pts;
-	//	RANSAC ransac(6, 0.99f);
-	//	vector<Point> ellipse_contour = ransac.get_ellipse(potential_pts);
-
 	//	while(1){
 	//		frame = framebuff.get_next_frame();
 	//		imshow("Camera output",frame);
 	//		waitKey(30);
 	//	}
 
-	Mat img = imread("eye.png");
+//	// testing ellipse fitting
+//	vector<Point> feature_pts;
+//	for (int i = 0; i < 63*2; i+=2){
+//		feature_pts.push_back(Point(points[i],points[i+1]));
+//	}
+//
+//	ellipsefit ef;
+//	vector<Point> ellipse_contour = ef.get_ellipse(feature_pts);
+//
+//	Mat img = imread("eye.png");
+//
+//	//if fail to read the image
+//	if ( img.empty() ) {
+//		cout << "Error loading the image" << endl;
+//		return -1;
+//	}
+//
+//
+//
+//	namedWindow("namedWindow", 1); //Create a window
+//	vector<vector<Point> > contour_vector;
+//	contour_vector.push_back(ellipse_contour);
+//	drawContours(img, contour_vector, 0, Scalar(0,0,255), 1.5, CV_AA);
+//
+////	circle(img, Point(FRAME_WIDTH/2, FRAME_HEIGHT/2), 30, Scalar(0,0,255), -1, 8);
+//	circle(img, Point(50, 50), 7, Scalar(0,0,255), -1, 8);
+//	imshow("namedWindow", img);
+//	waitKey(0); // Wait until user press some key
+//	return 0;
 
-	//if fail to read the image
-	if ( img.empty() ) {
-		cout << "Error loading the image" << endl;
-		return -1;
-	}
 
+// testing corneal reflection
+	Mat img = imread("eye_1.png", CV_LOAD_IMAGE_GRAYSCALE);
+	corneal_remover cr;
 
-	//Create a window
-	namedWindow("namedWindow", 1);
-	vector<vector<Point> > contour_vector;
-	contour_vector.push_back(ellipse_contour);
-	drawContours(img, contour_vector, 0, Scalar(0,0,255), 1.5, CV_AA);
-	
-	//show the image
-	imshow("namedWindow", img);
-	// Wait until user press some key
-	waitKey(0);
-
-
-	return 0;
+	Mat no_corneal = cr.remove_corneal_reflection(img);
+	namedWindow("no_corneal", 1); //Create a window
+	imshow("no_corneal", no_corneal);
+	waitKey(0); // Wait until user press some key	return 0;
 }
+
 
 // nourhan's main
 //int main() {
@@ -125,4 +140,3 @@ int main() {
 //	p.test();
 //	return 0;
 //}
-

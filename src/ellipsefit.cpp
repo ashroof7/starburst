@@ -1,9 +1,8 @@
 /*
  * ellipse_fit.cpp
  * ellipse fittin based on opencv ellipse fit
- *  Created on: Jan 29, 2014
- *  Author: Ashraf Saleh
- *
+ * Created on: Jan 29, 2014
+ * Author: Ashraf Saleh
  */
 
 #include <opencv2/highgui/highgui.hpp>

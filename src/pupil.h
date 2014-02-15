@@ -11,11 +11,18 @@
 #include <iostream>
 #include <vector>
 #include <iterator>
+#include <stdio.h>
 #include <stdio.h>      /* printf, scanf, NULL */
 #include <stdlib.h>     /* malloc, free, rand */
 #include <cmath>
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 using namespace std;
 using namespace cv;
@@ -108,8 +115,8 @@ private:
 
 		// Find all contours
 		vector<std::vector<cv::Point> > contours;
-
-		findContours(gray.clone(), contours, CV_RETR_EXTERNAL, 	CV_CHAIN_APPROX_NONE);
+		findContours(gray.clone(), contours, CV_RETR_EXTERNAL,
+				CV_CHAIN_APPROX_NONE);
 
 		// Fill holes in each contour
 

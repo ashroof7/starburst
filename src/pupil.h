@@ -35,6 +35,10 @@ const int pupil_edge_thres = 20;
 class pupil {
 public:
 	pupil(string input, int rays_number, int points);
+	pupil(Mat input,int rays_number,int points);
+	inline vector<Point *> get_feature_points(){
+		return feature_points;
+	};
 	virtual ~pupil();
 	void starburst_pupil_contour_detection(Mat gray);
 	vector<Point *> test();

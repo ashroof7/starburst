@@ -20,16 +20,12 @@
  * Hence, at every iteration this ratio increases, once the ratio decreases we found the corneal reflection
  *
  */
-corneal_reflection corneal_remover::locate_corneal_reflection(Mat gray_image){
+corneal_reflection corneal_remover::locate_corneal_reflection(Mat gray_image, Point center){
 
 	corneal_reflection cr;
 	cr.radius = -1;
 
-//	namedWindow("original", 1); //Create a window
-//	imshow("original", gray_image);
-//	waitKey(0); // Wait until user press some key
 
-	Mat binary_img(gray_image.rows, gray_image.cols, CV_8U, 0);
 	vector<vector<Point> > contours;
 
 	float prev_ratio = 0;
@@ -39,13 +35,20 @@ corneal_reflection corneal_remover::locate_corneal_reflection(Mat gray_image){
 
 	int center_x, center_y, radius; // corneal reflection center_x, center_y, radius
 
+	// setting region of interest
+	int sx = max(0, center.x - CORNEAL_ROI_SIZE),
+		sy = max(0, center.y - CORNEAL_ROI_SIZE),
+		ex = min(gray_image.cols, center.x + CORNEAL_ROI_SIZE),
+		ey = min(gray_image.rows, center.y + CORNEAL_ROI_SIZE);
+
+	Mat ROI_image(gray_image, Rect(sx, sy, ex-sx, ey-sy));
+	Mat binary_img(ROI_image.rows, ROI_image.cols, CV_8U, 0);
+
+
 	//TODO use binary search
 	for (int thres = MAX_THRESHOLD; thres > 0; --thres) {
-		threshold(gray_image, binary_img, thres, MAX_VALUE, THRESHOLD_TYPE);
+		threshold(ROI_image, binary_img, thres, MAX_VALUE, THRESHOLD_TYPE);
 
-//		namedWindow("binary", 1); //Create a window
-//		imshow("binary", binary_img);
-//		waitKey(0); // Wait until user press some key
 
 		contours.clear();
     	findContours(binary_img, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE, Point(0, 0) );
@@ -74,7 +77,8 @@ corneal_reflection corneal_remover::locate_corneal_reflection(Mat gray_image){
  			center_x /= (contours[max_area_idx].size());
 			center_y /= (contours[max_area_idx].size());
 
-			cr.center = Point(center_x, center_y);
+			// adding the offset of the ROI
+			cr.center = Point(center_x+sx, center_y+sy);
 			cr.radius = radius;
 
 			cout<<"center "<<cr.center<<" r = "<<cr.radius<<"  area = "<<max_area<<endl;
@@ -96,8 +100,8 @@ corneal_reflection corneal_remover::locate_corneal_reflection(Mat gray_image){
  * here we get the average intensity of a points in a ring enclosing the corneal reflection
  * the different part is that we floodfill the corneal reflection with this average intensity
  */
-Mat corneal_remover::remove_corneal_reflection(Mat image){
-	corneal_reflection cr = locate_corneal_reflection(image);
+Mat corneal_remover::remove_corneal_reflection(Mat image, Point start_point){
+	corneal_reflection cr = locate_corneal_reflection(image, start_point);
 	//TODO check
 	// assuming that number of border points = perimeter
 

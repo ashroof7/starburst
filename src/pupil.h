@@ -23,11 +23,11 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
-
+#include "ellipsefit.h"
 using namespace std;
 using namespace cv;
 
-#define PI 3.14159265
+//#define PI 3.14159265
 
 const int angle_step = 20;    //20 degrees
 const int pupil_edge_thres = 20;

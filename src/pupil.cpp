@@ -13,7 +13,7 @@ pupil:: pupil(string input,int rays_number,int points){
         minimum_cadidate_features=points;
 }
 
-pupil:: pupil(Mat input,int rays_number,int points){
+pupil:: pupil(Mat input, int rays_number,int points){
         N=rays_number;
         image=input;
         minimum_cadidate_features=points;

@@ -105,8 +105,9 @@ Mat corneal_remover::remove_corneal_reflection(Mat image, Point start_point){
 	//TODO check
 	// assuming that number of border points = perimeter
 
+	//TODO using try and error find optimum margin
 	// corneal reflection radius + safety margin
-	float r =  cr.radius + 5;
+	float r =  cr.radius + 10;
 	int n_pts = (int) (M_PI* 2.0 * r);
 
 	int cx = cr.center.x;

@@ -81,55 +81,69 @@ int points[] = {
 		69, 104
 };
 
+Mat frame;
+Mat no_corneal;
+Point center_point;
+vector<Point> feature_pts;
+vector<Point> ellipse_contour;
+vector<vector<Point> > contour_vector;
+ellipsefit ef;
+vector<Point *> temp;
 
+
+
+inline Mat go(Mat gray_image){
+	//FIXME urgent find a better estimate for the region of interest for corneal reflection
+	corneal_remover cr;
+	center_point.x = (gray_image.cols)/2;
+	center_point.y = (gray_image.rows)/2;
+	no_corneal = cr.remove_corneal_reflection(gray_image, center_point);
+
+//	return no_corneal;
+
+	// pupil detection
+	pupil p(no_corneal, 18, 10);
+	p.starburst_pupil_contour_detection(no_corneal);
+	temp = p.get_feature_points();
+	feature_pts.clear();
+	for (unsigned int i = 0; i < temp.size(); ++i){
+		feature_pts.push_back(Point(temp[i]->x, temp[i]->y));
+		cout<<feature_pts[i]<<endl;
+	}
+
+	// ellipse fitting
+	ellipse_contour = ef.get_ellipse(feature_pts);
+	contour_vector.clear();
+	contour_vector.push_back(ellipse_contour);
+	drawContours(gray_image, contour_vector, 0, Scalar(0,0,255), 1.5, CV_AA);
+	circle(gray_image, Point(FRAME_WIDTH/2, FRAME_HEIGHT/2), 30, Scalar(0,0,255), -1, 8);
+	// update the center estimate for the next frame
+	center_point = ef.get_bounding_box().center;
+
+	return gray_image;
+}
 
 int main() {
-		framebuffer framebuff(1, FRAME_WIDTH, FRAME_HEIGHT, 1);
-		Mat frame;
-		Mat gray_image;
-		Mat no_corneal;
-		Point center_point;
-		vector<Point> feature_pts;
-		vector<Point> ellipse_contour;
-		vector<vector<Point> > contour_vector;
-		ellipsefit ef;
-		vector<Point *> temp;
+//	framebuffer framebuff(0, FRAME_WIDTH, FRAME_HEIGHT, 1);
 
-		namedWindow("output", 1); //Create a window
-		while(1){
-			//TODO read gray image directly
-			// get frame after removing noise
-			frame = framebuff.get_next_frame();
+	namedWindow("output", 1); //Create a window
+//	while(1){
+//		//TODO read gray image directly
+//		// get frame after removing noise
+//		frame = framebuff.get_next_frame();
+//		// change RGB image to gray image
+//		cvtColor(frame, gray_image, CV_RGB2GRAY);
+//		imshow("output",no_corneal);
+//		waitKey(30);
+//	}
 
-			// change RGB image to gray image
-			cvtColor(frame, gray_image, CV_RGB2GRAY);
 
-			//FIXME urgent find a better estimate for the region of interest for corneal reflection
-			corneal_remover cr;
-			center_point.x = (gray_image.cols)/2;
-			center_point.y = (gray_image.rows)/2;
-			no_corneal = cr.remove_corneal_reflection(gray_image, center_point);
+	frame = imread("eye_1.png", CV_LOAD_IMAGE_GRAYSCALE);
 
-			// pupil detection
-			pupil p(no_corneal, 18, 10);
-			p.starburst_pupil_contour_detection(no_corneal);
-			temp = p.get_feature_points();
-			feature_pts.clear();
-			for (unsigned int i = 0; i < temp.size(); ++i)
-				feature_pts.push_back(Point(temp[i]->x, temp[i]->y));
-
-			// ellipse fitting
-			ellipse_contour = ef.get_ellipse(feature_pts);
-			contour_vector.clear();
-			contour_vector.push_back(ellipse_contour);
-			drawContours(gray_image, contour_vector, 0, Scalar(0,0,255), 1.5, CV_AA);
-			circle(gray_image, Point(FRAME_WIDTH/2, FRAME_HEIGHT/2), 30, Scalar(0,0,255), -1, 8);
-			// update the center estimate for the next frame
-			center_point = ef.get_bounding_box().center;
-
-			imshow("output",no_corneal);
-			waitKey(30);
-		}
+	Mat result = go(frame);
+	imshow("output", result);
+	waitKey(0);
+}
 
 //	// testing ellipse fitting
 //	vector<Point> feature_pts;
@@ -160,7 +174,7 @@ int main() {
 //	imshow("namedWindow", img);
 //	waitKey(0); // Wait until user press some key
 //	return 0;
-
+//
 // testing corneal reflection
 //	Mat img = imread("eye_1.png", CV_LOAD_IMAGE_GRAYSCALE);
 //	corneal_remover cr;
@@ -169,8 +183,6 @@ int main() {
 //	namedWindow("no_corneal", 1); //Create a window
 //	imshow("no_corneal", no_corneal);
 //	waitKey(0); // Wait until user press some key	return 0;
-}
-
 
 // nourhan's main
 //int main() {

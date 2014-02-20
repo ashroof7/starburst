@@ -36,41 +36,41 @@ vector<Point> getFeatures(vector<Point *> features) {
 	return curr;
 }
 
-int main() {
-	//corneal reflection
-	Mat gray_image;
-	Mat image1 = imread("eye_1.png", 1);
-	cvtColor(~image1, gray_image, CV_BGR2GRAY);
-	corneal_remover test;
-	Mat afterRemove = test.remove_corneal_reflection(gray_image);
-	imwrite("out.png", afterRemove);
-	namedWindow("corneal_reflection", CV_WINDOW_AUTOSIZE);
-	imshow("corneal_reflection", afterRemove);
-
-
-	//feature points detection
-	pupil p("out.png",18,10);
-	vector<Point *> features = p.test();
-	vector<Point> result = getFeatures(features);
-
-
-
-	//ellipse fit
-	ellipsefit ef;
-	 vector<Point> ell= ef.get_ellipse(result);
-
-	 //namedWindow("namedWindow", 1); //Create a window
-	 //vector<vector<Point> > contour_vector;
-	 //contour_vector.push_back(ell);
-	 //drawContours(image1, contour_vector, 0, Scalar(0,0,255), 1.5, CV_AA);
-
-
-	 //circle(img, Point(FRAME_WIDTH/2, FRAME_HEIGHT/2), 30, Scalar(0,0,255), -1, 8);
-	 //	circle(img, Point(50, 50), 7, Scalar(0,0,255), -1, 8);
-
-	//cvtColor(image1, gray_image, CV_BGR2GRAY);
-
-	waitKey(0);
-
-	return 0;
-}
+//int main() {
+//	//corneal reflection
+//	Mat gray_image;
+//	Mat image1 = imread("eye_1.png", 1);
+//	cvtColor(~image1, gray_image, CV_BGR2GRAY);
+//	corneal_remover test;
+//	Mat afterRemove = test.remove_corneal_reflection(gray_image);
+//	imwrite("out.png", afterRemove);
+//	namedWindow("corneal_reflection", CV_WINDOW_AUTOSIZE);
+//	imshow("corneal_reflection", afterRemove);
+//
+//
+//	//feature points detection
+//	pupil p("out.png",18,10);
+//	vector<Point *> features = p.test();
+//	vector<Point> result = getFeatures(features);
+//
+//
+//
+//	//ellipse fit
+//	ellipsefit ef;
+//	 vector<Point> ell= ef.get_ellipse(result);
+//
+//	 //namedWindow("namedWindow", 1); //Create a window
+//	 //vector<vector<Point> > contour_vector;
+//	 //contour_vector.push_back(ell);
+//	 //drawContours(image1, contour_vector, 0, Scalar(0,0,255), 1.5, CV_AA);
+//
+//
+//	 //circle(img, Point(FRAME_WIDTH/2, FRAME_HEIGHT/2), 30, Scalar(0,0,255), -1, 8);
+//	 //	circle(img, Point(50, 50), 7, Scalar(0,0,255), -1, 8);
+//
+//	//cvtColor(image1, gray_image, CV_BGR2GRAY);
+//
+//	waitKey(0);
+//
+//	return 0;
+//}

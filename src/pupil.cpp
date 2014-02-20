@@ -7,9 +7,9 @@
 
 #include "pupil.h"
 
-pupil:: pupil(string input,int rays_number,int points){
+pupil:: pupil(Mat input,int rays_number,int points){
         N=rays_number;
-        image=imread(input,1);
+        image=~input;
         minimum_cadidate_features=points;
 }
 
@@ -96,7 +96,7 @@ pupil::~pupil() {
  	double cy = start_point.y;
  	int first_ep_num;
 
- 	while (edge_thresh > 5&&loop_count <= 10) {
+ 	while (edge_thresh > 5&&loop_count <= 20) {
  		edge_intensity_diff.clear();
  		destroy_edge_point();
  		while (feature_points.size() < minimum_cadidate_features&&edge_thresh > 5 ) {
@@ -134,7 +134,7 @@ pupil::~pupil() {
 
    }// FIRST WHILE
 
-   if (loop_count > 10) {
+   if (loop_count > 20) {
      destroy_edge_point();
      printf("Error! edge points did not converge in %d iterations!\n", loop_count);
      return;
@@ -157,12 +157,13 @@ pupil::~pupil() {
   */
 
  vector<Point *> pupil::test(){
-	 cv::Mat gray=grey_scale_image();
-	 	cv::Mat gray_1=grey_scale_image();
-	 	find_best_guess( gray);
-	 	starburst_pupil_contour_detection(gray_1);
+	 Mat gray=~image;
+	 Mat gray_=~image;
 
-	 	cv::waitKey(0);
+	 	find_best_guess( gray_);
+
+	 	starburst_pupil_contour_detection(gray);
+
 	 	return feature_points;
  }
 

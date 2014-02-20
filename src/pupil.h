@@ -24,6 +24,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "ellipsefit.h"
+
 using namespace std;
 using namespace cv;
 
@@ -34,7 +35,7 @@ const int pupil_edge_thres = 20;
 
 class pupil {
 public:
-	pupil(string input, int rays_number, int points);
+	pupil(Mat input, int rays_number, int points);
 	virtual ~pupil();
 	void starburst_pupil_contour_detection(Mat gray);
 	vector<Point *> test();
@@ -43,7 +44,7 @@ private:
 	vector<Point *> feature_points;
 	vector<int> edge_intensity_diff;
 	int N;
-	Mat image;
+	Mat image,image_;
 	int minimum_cadidate_features;
 
 	void locate_edge_points(Mat image, int width, int height, double cx,
@@ -55,13 +56,14 @@ private:
 	 * return the converted image
 	 */
 
-	inline Mat grey_scale_image() {
+/*	inline Mat grey_scale_image() {
 
 		Mat gray_image;
 		cvtColor(~image, gray_image, CV_BGR2GRAY);
+
        return gray_image;
 
-	}
+	}*/
 
 	/*
 	 * count the mean of the current points to use it as the start point in starburst Algorithm next iteration

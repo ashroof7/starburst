@@ -42,8 +42,8 @@ pupil::~pupil() {
 	        angle < angle_normal + angle_spread / 2; angle += angle_step) {
 			dis_cos = dis * cos(angle);
 			dis_sin = dis * sin(angle);
-			p.x = (cx + dis_cos);
-			p.y = (cy + dis_sin);
+			p.x =round (cx + dis_cos);
+			p.y =round (cy + dis_sin);
 
 			if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height){
 						continue;}
@@ -52,8 +52,8 @@ pupil::~pupil() {
 			intensity = image.at<uchar>( p.y,  p.x);
 			pixel_value1 = (int)intensity.val[0];
 			while (1) {
-				p.x =(p.x+ dis_cos);
-				p.y =(p.y+ dis_sin);
+				p.x =round(p.x+ dis_cos);
+				p.y =round(p.y+ dis_sin);
 				//std::cout<<p.X<<" "<<p.Y<<std::endl;
 
 				if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height){
@@ -96,7 +96,7 @@ pupil::~pupil() {
  	double cy = start_point.y;
  	int first_ep_num;
 
- 	while (edge_thresh > 5&&loop_count <= 20) {
+ 	while (edge_thresh > 5&&loop_count <= 50) {
  		edge_intensity_diff.clear();
  		destroy_edge_point();
  		while (feature_points.size() < minimum_cadidate_features&&edge_thresh > 5 ) {
@@ -134,7 +134,7 @@ pupil::~pupil() {
 
    }// FIRST WHILE
 
-   if (loop_count > 20) {
+   if (loop_count > 50) {
      destroy_edge_point();
      printf("Error! edge points did not converge in %d iterations!\n", loop_count);
      return;

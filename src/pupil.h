@@ -3,6 +3,8 @@
  *
  *  Created on: Jan 31, 2014
  *      Author: Norhan
+ *  this class is based on original starbrust algo implementation
+ *
  */
 
 #ifndef PUPIL_H_
@@ -11,24 +13,15 @@
 #include <iostream>
 #include <vector>
 #include <iterator>
-#include <stdio.h>
 #include <stdio.h>      /* printf, scanf, NULL */
 #include <stdlib.h>     /* malloc, free, rand */
 #include <cmath>
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include "ellipsefit.h"
 
 using namespace std;
 using namespace cv;
 
-//#define PI 3.14159265
 
 const int angle_step = 20;    //20 degrees
 const int pupil_edge_thres = 20;
@@ -38,14 +31,14 @@ public:
 	pupil(Mat input, int rays_number, int points);
 	virtual ~pupil();
 	void starburst_pupil_contour_detection(Mat gray);
-	vector<Point *> test();
+	vector<Point *> get_feature_pts();
 private:
 	Point start_point;
 	vector<Point *> feature_points;
 	vector<int> edge_intensity_diff;
 	int N;
-	Mat image,image_;
-	int minimum_cadidate_features;
+	Mat image, image_;
+	unsigned int minimum_cadidate_features;
 
 	void locate_edge_points(Mat image, int width, int height, double cx,
 			double cy, int dis, double angle_step, double angle_normal,
@@ -56,7 +49,7 @@ private:
 	 * return the converted image
 	 */
 
-/*	inline Mat grey_scale_image() {
+	/*	inline Mat grey_scale_image() {
 
 		Mat gray_image;
 		cvtColor(~image, gray_image, CV_BGR2GRAY);
@@ -72,10 +65,9 @@ private:
 
 	inline Point get_edge_mean() {
 		Point *edge;
-		int i;
 		double sumx = 0, sumy = 0;
 		Point edge_mean;
-		for (i = 0; i < feature_points.size(); i++) {
+		for (unsigned int i = 0; i < feature_points.size(); i++) {
 			edge = feature_points.at(i);
 			sumx += edge->x;
 			sumy += edge->y;
@@ -124,7 +116,7 @@ private:
 
 		drawContours(gray, contours, -1, CV_RGB(255,255,255), -1);
 
-		for (int i = 0; i < contours.size(); i++) {
+		for (unsigned int i = 0; i < contours.size(); i++) {
 			double area = cv::contourArea(contours[i]);
 			Rect rect = cv::boundingRect(contours[i]);
 			int radius = rect.width / 2;
@@ -134,19 +126,15 @@ private:
 			if (area >= 30
 					&& std::abs(
 							1 - ((double) rect.width / (double) rect.height))
-							<= 0.2
-					&& std::abs(1 - (area / (PI * std::pow(radius, 2))))
-							<= 0.2) {
+			<= 0.2
+			&& std::abs(1 - (area / (M_PI * std::pow(radius, 2))))
+			<= 0.2) {
 				center.x = rect.x + radius;
 				center.y = rect.y + radius;
 				start_point.x = rect.x + radius;
 				start_point.y = rect.y + radius;
-
 			}
 		}
-		cout << "cx= " << center.x<< endl;
-		cout << "cy= " << center.y << endl;
-
 		return center;
 
 	}

@@ -92,23 +92,21 @@ vector<Point *> temp;
 
 
 
-inline Mat go(Mat gray_image){
+inline Mat go(Mat &gray_image, Mat &color_image){
 	//FIXME urgent find a better estimate for the region of interest for corneal reflection
 	corneal_remover cr;
 	center_point.x = (gray_image.cols)/2;
 	center_point.y = (gray_image.rows)/2;
 	no_corneal = cr.remove_corneal_reflection(gray_image, center_point);
 
-//	return no_corneal;
 
 	// pupil detection
 	pupil p(no_corneal, 18, 10);
-	p.starburst_pupil_contour_detection(no_corneal);
-	temp = p.get_feature_points();
 	feature_pts.clear();
+	temp = p.get_feature_pts();
 	for (unsigned int i = 0; i < temp.size(); ++i){
 		feature_pts.push_back(Point(temp[i]->x, temp[i]->y));
-		cout<<feature_pts[i]<<endl;
+//		cout<<feature_pts[i]<<endl;
 	}
 
 	// ellipse fitting
@@ -121,6 +119,39 @@ inline Mat go(Mat gray_image){
 	center_point = ef.get_bounding_box().center;
 
 	return gray_image;
+}
+
+
+void test_pupil(){
+	namedWindow("test_pupil", 1); //Create a window
+
+//	frame = imread("eye_1.png", CV_LOAD_IMAGE_GRAYSCALE);
+	frame = imread("eye_2.png", CV_LOAD_IMAGE_GRAYSCALE);
+
+	Mat color_img = imread("eye_2.png", CV_LOAD_IMAGE_COLOR);
+
+	Point p_center = Point(177, 206);
+
+	pupil p(frame, 18, 10);
+
+		feature_pts.clear();
+		temp = p.get_feature_pts();
+		float x,y;
+
+		circle(color_img, p_center, 2.5, Scalar(255,0,0), -1, 8, 0);
+		for (unsigned int i = 0; i < temp.size(); ++i){
+			feature_pts.push_back(Point(temp[i]->x, temp[i]->y));
+			x = feature_pts[i].x;
+			y = feature_pts[i].y;
+
+			line(color_img, Point(x-5, y), Point(x+5, y), Scalar(0,255, 0), 1, 8, 0);
+			line(color_img, Point(x, y-5), Point(x, y+5), Scalar(0,255, 0), 1, 8, 0);
+			circle(color_img, feature_pts[i], 1, Scalar(0,0,255), -1, 8, 0);
+
+//			cout<<feature_pts[i]<<endl;
+		}
+	imshow("test_pupil", color_img);
+	waitKey(0);
 }
 
 int main() {
@@ -137,11 +168,12 @@ int main() {
 //		waitKey(30);
 //	}
 
-
 	frame = imread("eye_1.png", CV_LOAD_IMAGE_GRAYSCALE);
+//	frame = imread("eye_2.png", CV_LOAD_IMAGE_GRAYSCALE);
+	Mat color_img = imread("eye_1.png", CV_LOAD_IMAGE_COLOR);
 
-	Mat result = go(frame);
-	imshow("output", result);
+	go(frame, color_img);
+	imshow("output", frame);
 	waitKey(0);
 }
 
@@ -190,3 +222,4 @@ int main() {
 //	p.test();
 //	return 0;
 //}
+

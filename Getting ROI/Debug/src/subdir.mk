@@ -4,12 +4,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/CenterOfFocus.cpp \
 ../src/main.cpp 
 
 OBJS += \
+./src/CenterOfFocus.o \
 ./src/main.o 
 
 CPP_DEPS += \
+./src/CenterOfFocus.d \
 ./src/main.d 
 
 

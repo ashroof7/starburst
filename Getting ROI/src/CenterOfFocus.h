@@ -26,6 +26,7 @@ public:
 	CenterOfFocus();
 	void drawCircle(Mat img, Point center);
 	int getCOF();
+	pair<Mat, Point>* getArray();
 	virtual ~CenterOfFocus();
 };
 

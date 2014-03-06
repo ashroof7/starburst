@@ -102,3 +102,6 @@ int CenterOfFocus::getCOF() {
 CenterOfFocus::~CenterOfFocus() {
 }
 
+pair<Mat, Point>* CenterOfFocus::getArray() {
+	return this->grayImagesAndCenters;
+}

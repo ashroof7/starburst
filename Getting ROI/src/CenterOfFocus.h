@@ -22,6 +22,7 @@ class CenterOfFocus {
 
 public:
 	int state;
+	pair<Mat, Point> grayImagesAndCenters[5];
 	CenterOfFocus();
 	void drawCircle(Mat img, Point center);
 	int getCOF();

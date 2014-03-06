@@ -28,7 +28,9 @@ void CenterOfFocus::drawCircle(Mat img, Point center) {
 
 int CenterOfFocus::getCOF() {
 	Mat circleImg = Mat::zeros(w, w, CV_8UC3);
-	drawCircle(circleImg, Point( w / 2, w / 2));
+	Point center;
+	center = Point( w / 2, w / 2);
+	drawCircle(circleImg, center);
 	state++;
 	namedWindow("firstWindow", CV_WINDOW_NORMAL);
 	setWindowProperty("firstWindow", CV_WND_PROP_FULLSCREEN,
@@ -42,31 +44,54 @@ int CenterOfFocus::getCOF() {
 	while (true) {
 		cap >> frame;
 		if (waitKey(15) >= 0) {
+			Mat temp;
+			frame.copyTo(temp);
 			std::ostringstream stm;
-			stm << state;
+			stm << (state - 1);
+
 			string fileName = stm.str();
-			imwrite(fileName + ".jpg", frame);
-			destroyWindow("firstWindow");
-			namedWindow("firstWindow", CV_WINDOW_NORMAL);
-			setWindowProperty("firstWindow", CV_WND_PROP_FULLSCREEN,
-					CV_WINDOW_FULLSCREEN);
+
+			// here we will save the image in array.
+			Mat gray_image;
+			Point centerOfTarget;
+			centerOfTarget.x = center.x;
+			centerOfTarget.y = center.y;
+			pair<Mat, Point> obj;
+			obj.second = centerOfTarget;
+			imwrite(fileName + ".jpg", temp);
+			cvtColor(temp, gray_image, CV_BGR2GRAY);
+			obj.first = gray_image;
+
 			if (state == 1) {
 				circleImg = Mat::zeros(w, w, CV_8UC3);
-				drawCircle(circleImg, Point((w / 32), (w / 32)));
+				center = Point((w / 32), (w / 32));
+				drawCircle(circleImg, center);
 			} else if (state == 2) {
 				circleImg = Mat::zeros(w, w, CV_8UC3);
-				drawCircle(circleImg, Point(w - (w / 32), (w / 32)));
+				center = Point(w - (w / 32), (w / 32));
+				drawCircle(circleImg, center);
 			} else if (state == 3) {
 				circleImg = Mat::zeros(w, w, CV_8UC3);
-				drawCircle(circleImg, Point(w / 32, w - (w / 32)));
+				center = Point(w / 32, w - (w / 32));
+				drawCircle(circleImg, center);
 			} else if (state == 4) {
 				circleImg = Mat::zeros(w, w, CV_8UC3);
-				drawCircle(circleImg, Point(w - (w / 32), w - (w / 32)));
+				center = Point(w - (w / 32), w - (w / 32));
+				drawCircle(circleImg, center);
 			} else {
+				grayImagesAndCenters[state - 1] = obj;
 				destroyWindow("firstWindow");
 				cap.release();
-				return -1;
+				for (int i = 0; i < 5; i++) {
+					std::ostringstream no;
+					no << i;
+					string grayFileName = no.str() + "_gray_image.jpg";
+
+					imwrite(grayFileName, grayImagesAndCenters[i].first);
+				}
+				break;
 			}
+			grayImagesAndCenters[state - 1] = obj;
 			state++;
 		}
 		imshow("firstWindow", circleImg);

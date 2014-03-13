@@ -27,11 +27,14 @@ const int angle_step = 20;    //20 degrees
 const int pupil_edge_thres = 20;
 
 class pupil {
+
 public:
-	pupil(Mat input, int rays_number, int points);
+	pupil(int rays_number, int points);
+	pupil();
 	virtual ~pupil();
 	void starburst_pupil_contour_detection(Mat gray);
-	vector<Point *> get_feature_pts();
+	vector<Point *> get_feature_pts(Mat image);
+
 private:
 	Point start_point;
 	vector<Point *> feature_points;

@@ -81,7 +81,7 @@ corneal_reflection corneal_remover::locate_corneal_reflection(Mat gray_image, Po
 			cr.center = Point(center_x+sx, center_y+sy);
 			cr.radius = radius;
 
-			cout<<"center "<<cr.center<<" r = "<<cr.radius<<"  area = "<<max_area<<endl;
+//			cout<<"center "<<cr.center<<" r = "<<cr.radius<<"  area = "<<max_area<<endl;
 			break;
 
 			//TODO try fitEllipse instead of estimation

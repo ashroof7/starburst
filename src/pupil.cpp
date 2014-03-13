@@ -3,18 +3,22 @@
  *
  *  Created on: Jan 31, 2014
  *      Author: Norhan
- *  this class is based on original starbrust algo implementation
+ *  this class is heavily based on the original starbrust implementation
  *
  */
 
 #include "pupil.h"
 
-pupil:: pupil(Mat input,int rays_number,int points){
+pupil::pupil(int rays_number, int points){
 	N=rays_number;
-	image=input;
 	minimum_cadidate_features=points;
 }
 
+pupil::pupil(){
+	// setting with default values
+	N = 18;
+	minimum_cadidate_features = 10;
+}
 
 pupil::~pupil() {
 
@@ -75,8 +79,8 @@ void pupil::locate_edge_points(Mat image, int width, int height,
  * return void
  */
 void pupil::starburst_pupil_contour_detection(Mat gray) {
-	std::cout<<"startx="<<start_point.x<<std::endl;
-	std::cout<<"starty="<<start_point.y<<std::endl;
+//	std::cout<<"startx="<<start_point.x<<std::endl;
+//	std::cout<<"starty="<<start_point.y<<std::endl;
 
 	int dis = 7;
 	int edge_thresh=pupil_edge_thres;
@@ -149,10 +153,13 @@ void pupil::starburst_pupil_contour_detection(Mat gray) {
  * return the final vector
  */
 
-vector<Point *> pupil::get_feature_pts(){
-	Mat gray = image;
+vector<Point *> pupil::get_feature_pts(Mat _image){
+	Mat gray = image = _image;
 	Mat gray_= ~(image.clone());
 
+
+	edge_intensity_diff.clear();
+	feature_points.clear();
 	// find best guess to the pupil center
 	find_best_guess( gray_);
 

@@ -30,7 +30,7 @@ public:
 	Mat remove_corneal_reflection(Mat image, Point start_point);
 
 private:
-	corneal_reflection locate_corneal_reflection(Mat gray_image, Point start_point);
+	corneal_reflection locate_corneal_reflection(Mat gray_image, Point center);
 
 };
 

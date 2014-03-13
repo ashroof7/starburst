@@ -17,10 +17,11 @@ using namespace std;
 using namespace cv;
 
 const double EPS = 10e-6;
-const double PI = 3.14159265;
-const float INLIER_EPS = 1.98;
+const float INLIER_EPS = 2.98f;
 const int INF = 10e6;
-
+const int BASE_POINTS_N = 5; //FIXME change hardcoded value
+const float p = 0.99f; // RANSAC accuracy
+const float LOG_1_P = logf(1-p);
 
 class ellipsefit{
 public:
@@ -42,7 +43,13 @@ private:
 	inline vector<Point> choose_random(vector<Point> &pts, int n){
 		random_shuffle(pts.begin(), pts.end());
 		vector<Point> rnd_pts(pts.begin(), pts.begin()+n);
+
+//		vector<Point> rnd_pts;
+//		for (int k = 0; k < n; k++)
+//			rnd_pts.push_back( pts[(rand()%(pts.size()))] );
+//
 		return rnd_pts;
+
 	}
 
 	/* returns the sum of distance between the ellipse contour and a vector of points,
@@ -77,7 +84,7 @@ private:
 
 		// generate contour points
 		int n = 150;
-		float dtheta = PI*2/n;
+		float dtheta = M_PI*2/n;
 		float theta = 0;
 
 		for (int i = 0; i < n; ++i, theta+=dtheta) {

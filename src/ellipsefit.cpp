@@ -56,7 +56,8 @@ vector<Point> ellipsefit::get_ellipse(vector<Point> &pts){
 	for (int i = 0; i < R; ++i) {
 		iterations++;
 
-
+		if (iterations>= 100)
+			return best_contour;
 		// choose n random points
 		// every time shuffle the array .. successive shuffles are not bad [[yaoMing]]
 		base_pts = choose_random(pts, BASE_POINTS_N);

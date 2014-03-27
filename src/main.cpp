@@ -10,6 +10,8 @@ using namespace cv;
 
 const int FRAME_WIDTH = 800;
 const int FRAME_HEIGHT = 1280;
+starburst sb;
+Point c;
 
 void test_pupil(){
 	namedWindow("test_pupil", 1); //Create a window
@@ -43,31 +45,37 @@ void test_pupil(){
 	waitKey(0);
 }
 
+//void calibrate(){
+//	CenterOfFocus calib();
+//}
+
 int main() {
-	//	framebuffer framebuff(0, FRAME_WIDTH, FRAME_HEIGHT, 1);
+		framebuffer framebuff(0, FRAME_WIDTH, FRAME_HEIGHT, 1);
+		Mat frame, gray_image, result;
 
 	namedWindow("output", 1); //Create a window
-	//	while(1){
-	//		//TODO read gray image directly
-	//		// get frame after removing noise
-	//		frame = framebuff.get_next_frame();
-	//		// change RGB image to gray image
-	//		cvtColor(frame, gray_image, CV_RGB2GRAY);
-	//		imshow("output",no_corneal);
-	//		waitKey(30);
-	//	}
+		while(1){
+			//TODO read gray image directly
+			// get frame after removing noise
+			frame = framebuff.get_next_frame();
+			// change RGB image to gray image
+			cvtColor(frame, gray_image, CV_RGB2GRAY);
+			c = sb.go(gray_image.clone());
+			result = sb.get_debug_image();
+			imshow("output",result);
+			waitKey(30);
+		}
 
-	Mat frame = imread("eye_1.png", CV_LOAD_IMAGE_GRAYSCALE);
+//	Mat frame = imread("eye_1.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//	frame = imread("eye_2.png", CV_LOAD_IMAGE_GRAYSCALE);
-	starburst sb;
-	Point c;
-	while(true){
-		c = sb.go(frame.clone());
-		cout<<c<<endl;
-		Mat result = sb.get_debug_image();
-		imshow("output", result);
-		waitKey(0);
-	}
+
+//	while(true){
+//		c = sb.go(frame.clone());
+//		cout<<c<<endl;
+//		Mat result = sb.get_debug_image();
+//		imshow("output", result);
+//		waitKey(0);
+//	}
 }
 
 //	// testing ellipse fitting

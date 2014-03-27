@@ -25,7 +25,12 @@ Point starburst::go(Mat gray_image){
 	feature_pts.clear();
 	temp = p.get_feature_pts(gray_image);
 
+	if (temp.size() < 50 || temp.size() > 300)
+		return center_point;
+
 	float x,y;
+	cout<<"temp = "<<temp.size()<<endl;
+	feature_pts.clear();
 	for (unsigned int i = 0; i < temp.size(); ++i){
 		feature_pts.push_back(Point(temp[i]->x, temp[i]->y));
 		x = feature_pts[i].x;
@@ -37,6 +42,7 @@ Point starburst::go(Mat gray_image){
 	}
 
 	// ellipse fitting
+	cout<<"7a7a 1 "<<feature_pts.size()<<endl;
 	ellipse_contour = ef.get_ellipse(feature_pts);
 	contour_vector.clear();
 	contour_vector.push_back(ellipse_contour);
@@ -44,6 +50,7 @@ Point starburst::go(Mat gray_image){
 	//	circle(color_image, Point(FRAME_WIDTH/2, FRAME_HEIGHT/2), 30, Scalar(0,0,255), -1, 8);
 	// update the center estimate for the next frame
 	center_point = ef.get_bounding_box().center;
+
 
 
 	x = center_point.x;

@@ -8,10 +8,9 @@
 using namespace std;
 using namespace cv;
 
-const int FRAME_WIDTH = 800;
-const int FRAME_HEIGHT = 1280;
-starburst sb;
-Point c;
+const int FRAME_WIDTH = 640;
+const int FRAME_HEIGHT = 480;
+pipeline sb;
 
 void test_pupil(){
 	namedWindow("test_pupil", 1); //Create a window
@@ -49,33 +48,85 @@ void test_pupil(){
 //	CenterOfFocus calib();
 //}
 
+
+/*
+// test camera main
+int main(int, char**) {
+    VideoCapture cap(1); // open the default camera
+    if(!cap.isOpened())  // check if we succeeded
+        return -1;
+
+    namedWindow("edges",CV_WINDOW_AUTOSIZE);
+    int i = 0 ;
+
+    double dWidth = cap.get(CV_CAP_PROP_FRAME_WIDTH); //get the width of frames of the video
+    double dHeight = cap.get(CV_CAP_PROP_FRAME_HEIGHT); //get the height of frames of the video
+    cout << "Frame Size = " << dWidth << "x" << dHeight << endl;
+    Size frameSize(static_cast<int>(dWidth), static_cast<int>(dHeight));
+
+    VideoWriter output("test.avi", CV_FOURCC('P','I','M','1'), 20, frameSize, true);
+
+    Mat frame;
+    cap >> frame; // get a new frame from camera
+    int k;
+    while(1) {
+//        cout<<i++<<endl;
+    	cap >> frame; // get a new frame from camera
+        output.write(frame);
+        imshow("edges", frame);
+        if( k = waitKey(30) >= 0) {
+            cout<<k<<endl;
+        	cout<<"esc pressed !"<<endl;
+        	break;
+        }
+    }
+    cap.release();
+    // the camera will be deinitialized automatically in VideoCapture destructor
+    return 0;
+}
+*/
+
+
+
 int main() {
-		framebuffer framebuff(0, FRAME_WIDTH, FRAME_HEIGHT, 1);
-		Mat frame, gray_image, result;
+	framebuffer framebuff(1, FRAME_WIDTH, FRAME_HEIGHT, 0);
+	Mat frame, gray_image, result;
 
 	namedWindow("output", 1); //Create a window
-		while(1){
-			//TODO read gray image directly
-			// get frame after removing noise
-			frame = framebuff.get_next_frame();
-			// change RGB image to gray image
-			cvtColor(frame, gray_image, CV_RGB2GRAY);
-			c = sb.go(gray_image.clone());
-			result = sb.get_debug_image();
-			imshow("output",result);
-			waitKey(30);
-		}
 
-//	Mat frame = imread("eye_1.png", CV_LOAD_IMAGE_GRAYSCALE);
+	Point center(-1,-1);
+
+	while(1){
+		//TODO read gray image directly
+		// get frame after removing noise
+		frame = framebuff.get_next_frame();
+		// change RGB image to gray image
+		cvtColor(frame, gray_image, CV_BGR2GRAY);
+		flip(gray_image, gray_image, 1);
+		if (center.x == -1){ // first time initialization
+			center.x = (gray_image.cols)/2;
+			center.y = (gray_image.rows)/2;
+		}
+		center = sb.go(gray_image.clone(), center);
+
+
+		result = sb.get_debug_image();
+		imshow("output",result);
+		if(waitKey(100)==27) // ESC pressed
+			break;
+	}
+//	framebuff.release_camera();
+
+	//	Mat frame = imread("eye_1.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//	frame = imread("eye_2.png", CV_LOAD_IMAGE_GRAYSCALE);
 
-//	while(true){
-//		c = sb.go(frame.clone());
-//		cout<<c<<endl;
-//		Mat result = sb.get_debug_image();
-//		imshow("output", result);
-//		waitKey(0);
-//	}
+	//	while(true){
+	//		c = sb.go(frame.clone());
+	//		cout<<c<<endl;
+	//		Mat result = sb.get_debug_image();
+	//		imshow("output", result);
+	//		waitKey(0);
+	//	}
 }
 
 //	// testing ellipse fitting

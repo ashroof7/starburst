@@ -45,6 +45,13 @@ corneal_reflection corneal_remover::locate_corneal_reflection(Mat gray_image, Po
 	Mat binary_img(ROI_image.rows, ROI_image.cols, CV_8U, 0);
 
 
+	Point pt1(sx, sy);
+	Point pt2(ex, ey);
+	rectangle(gray_image, pt1, pt2, Scalar(255, 0, 0), 2, 8, 0);
+
+//	namedWindow("ROI", 1); //Create a window
+//	imshow("ROI", gray_image);
+
 	//TODO use binary search
 	for (int thres = MAX_THRESHOLD; thres > 0; --thres) {
 		threshold(ROI_image, binary_img, thres, MAX_VALUE, THRESHOLD_TYPE);
@@ -101,7 +108,7 @@ corneal_reflection corneal_remover::locate_corneal_reflection(Mat gray_image, Po
  * the different part is that we floodfill the corneal reflection with this average intensity
  */
 Mat corneal_remover::remove_corneal_reflection(Mat image, Point start_point){
-	corneal_reflection cr = locate_corneal_reflection(image, start_point);
+	cr = locate_corneal_reflection(image, start_point);
 	//TODO check
 	// assuming that number of border points = perimeter
 

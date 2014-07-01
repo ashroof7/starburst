@@ -28,6 +28,7 @@ public:
 	Mat get_next_frame();
 	Mat get_last_frame();
 	void set_noise_removal(bool value);
+	void release_camera();
 
 private:
 	VideoCapture cam_stream;

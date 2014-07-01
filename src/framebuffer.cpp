@@ -73,3 +73,7 @@ inline Mat framebuffer::noise_reduction(Mat src){
 framebuffer::~framebuffer() {
 }
 
+void framebuffer::release_camera() {
+	cam_stream.release();
+}
+
